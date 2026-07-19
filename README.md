@@ -11,9 +11,18 @@ Starter project Next.js, Prisma, PostgreSQL, dan Docker Compose. Production menj
 
 1. Salin `.env.example` menjadi `.env`.
 2. Ganti `POSTGRES_PASSWORD` dengan secret alfanumerik yang panjang. Sesuaikan juga bagian password pada `DATABASE_URL` bila menjalankan Prisma dari host.
-3. Jalankan `docker compose up --build`.
-4. Buka `http://localhost:3000`.
-5. Periksa status pada `http://localhost:3000/api/health`.
+3. Untuk menjalankan Next.js langsung dari host dan hanya menjalankan PostgreSQL di Docker, gunakan:
+
+```sh
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db
+npm run dev
+```
+
+Perintah tersebut membuka PostgreSQL pada `localhost:5432` untuk development. Konfigurasi produksi pada `docker-compose.yml` tetap tidak mempublikasikan port database.
+
+4. Untuk menjalankan seluruh stack Docker, jalankan `docker compose up --build`.
+5. Buka `http://localhost:3000`.
+6. Periksa status pada `http://localhost:3000/api/health`.
 
 PostgreSQL hanya memakai `POSTGRES_USER`, `POSTGRES_PASSWORD`, dan `POSTGRES_DB` ketika volume pertama dibuat. Jika mengubah salah satu nilai tersebut pada local development, reset database lokal sebelum menjalankan Compose lagi:
 
@@ -60,3 +69,6 @@ Service `db` tidak memiliki port publik dan hanya dapat diakses oleh `app` melal
 | `POSTGRES_DB` | Nama database PostgreSQL. |
 | `APP_PORT` | Port host untuk local Compose, default `3000`. |
 | `DATABASE_URL` | Hanya dipakai ketika menjalankan Prisma/Next.js langsung dari host. Compose membentuk URL internalnya sendiri. |
+| `WOOCOMMERCE_URL` | URL dasar WordPress/WooCommerce, misalnya `https://yantotanjung.com`. |
+| `WOOCOMMERCE_CONSUMER_KEY` | Consumer key WooCommerce read-only untuk dashboard kupon dan order. Jangan commit nilainya. |
+| `WOOCOMMERCE_CONSUMER_SECRET` | Consumer secret WooCommerce read-only untuk dashboard kupon dan order. Jangan commit nilainya. |
